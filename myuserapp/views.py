@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render ,redirect
 from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.conf import settings
+from . import views
+
 
 def homepage(request):
     return render(request,"home.html")
@@ -7,34 +11,64 @@ def homepage(request):
 def aboutpage(request):
     return render(request,"about.html")
 
-def contact(request):
 
-    english = 70
-    maths = 80
-    science = 90
+def saveSessionData(request):
+    request.session['username'] = "shivay"
+    return HttpResponse("session creater")
 
-    total = english + maths + science
-    percentage = total / 300 * 100
-
-    if english < 33 or maths < 33 or science < 33:
-        result = "Fail"
+def gatSessionData(request):
+    if request.session.has_key('username'):
+       MSG = request.session['username'] 
+       return HttpResponse(MSG)
     else:
-        result = "Pass"
+        return HttpResponse("session variate not found")
 
-    context = {
-        'english': english,
-        'maths': maths,
-        'science': science,
-        'total': total,
-        'percentage': percentage,
-        'result': result,
-    }
+def deletSessionData(request):
+    request.session['username'] 
+    return HttpResponse("session removed")
 
-    return render(request, 'ans.html', context)
+def getSessionData2(request):
+    MSG = request.session['username'] 
+    return HttpResponse(MSG)
 
+def loginpage(request):
+    return render(request,"login.html")
+
+def loginprocess(request):
+    txt1 = request.POST['email']
+    request.session['myemail'] = txt1
+    return redirect(dashboard)
+
+def dashboard(request):
+    if request.session.has_key('myemail'):
+        return render(request,"dashboard.html")
+    else:
+        return redirect(loginpage)
     
+def logout(request):
+    del request.session ['myemail']
+    return redirect(loginpage)
 
+def mailsenddemo(request):
+          subject = 'Django Mail Demo'
+          message = ' Hello How are you ?'
+          email_from = settings.EMAIL_HOST_USER
+          recipient_list = ['dilipkumarprajapati.24.ce@iite.indusuni.ac.in',]
+          send_mail( subject, message, email_from, recipient_list )
+          return HttpResponse("Mail Sent Successfully")
+def contactpage (request):
+     return render(request, 'contact.html')
 
+def contactpageprocess (request):
+    txt1 = request.POST['txt1']
+    txt2 = request.POST['txt2']
+    txt3 = request.POST['txt3']
 
-
+    mymsg = "Hello has Contact you", txt1," Mobile No is ",txt2," Message is ",txt3
+    subject ='Contact us From Website'
+    email_from = settings.EMAIL_HOST_USER
     
+    message = mymsg
+    recipient_list = ['dilipkumarprajapati.24.ce@iite.indusuni.ac.in',]
+    send_mail(subject, message, email_from, recipient_list)
+    return HttpResponse("Thank you for Contacting us.")

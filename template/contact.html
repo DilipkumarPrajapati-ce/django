@@ -8,14 +8,18 @@
    <title>Document</title>
 </head>
 <body>
-    
-    <form method="post" action="/contectprocess">
+    <h3>contact us</h3>
+    <form method="post" action="/contactprocess">
         {% csrf_token %}
+        name : <input type="text" name="txt1"/> <br/>
+        mobile : <input type="text" name="txt2"/> <br/>
+        message : <input type="text" name="txt3"/> <br/>
+        
         number 1 : <input type='number' min="1" max="100" name="'txt1"
         required autocomplete="off"/>
         number 2 : <input type='number' min="1" max="100" name="'txt2"
         required autocomplete="off"/>
-        <input type="'submit">
+        <input type="submit">
     </form>
     
     

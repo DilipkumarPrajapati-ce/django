@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +8,16 @@
 </head>
 <body>
     
-     {% include 'menu.html'%}
-    <h1>hello home</h1>
-    <img  src="{% static '2.jpg' %}"/>
-    <img  src="{% static '1.jpg' %}"/>
+    <h1>Login Form</h1>
+
+    <form method="post"
+      action="/loginprocess">
+        {% csrf_token %}
+        Email : <input type="email"
+        name="email"/>
+        <input type="submit"/>
+    </form>
+
+
 </body>
 </html>
