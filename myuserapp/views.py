@@ -3,6 +3,18 @@ from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
 from . import views
+from .models import Student
+
+def addstudentfrom(request):
+    return render(request ,'add-student.html')
+
+def addstudentprocess(request):
+    txt1 = request.POST['txt1']
+    txt2 = request.POST['txt2']
+    txt3 = request.POST['txt3']
+    txt4 = request.POST['txt4']
+    Student.objects.create(name=txt1,mobile=txt2,email=txt3,address=txt4)
+    return HttpResponse("thank you")
 
 
 def homepage(request):
@@ -63,7 +75,6 @@ def contactpageprocess (request):
     txt1 = request.POST['txt1']
     txt2 = request.POST['txt2']
     txt3 = request.POST['txt3']
-
     mymsg = "Hello has Contact you", txt1," Mobile No is ",txt2," Message is ",txt3
     subject ='Contact us From Website'
     email_from = settings.EMAIL_HOST_USER

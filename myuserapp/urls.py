@@ -13,6 +13,7 @@ urlpatterns=[
     path('loginprocess',views.loginprocess),
     path('dashbord',views.dashboard),
     path('maildemo',views.mailsenddemo),
-
-    
+    path('addstudent',views.addstudentfrom),
+    path('addstudentfrom',views.addstudentprocess),
+    path('add-student-process',views.addstudentprocess)
 ]
