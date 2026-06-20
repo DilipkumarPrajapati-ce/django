@@ -4,6 +4,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 from . import views
 from .models import Student
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+
+
 
 def addstudentfrom(request):
     return render(request ,'add-student.html')
@@ -83,3 +87,64 @@ def contactpageprocess (request):
     recipient_list = ['dilipkumarprajapati.24.ce@iite.indusuni.ac.in',]
     send_mail(subject, message, email_from, recipient_list)
     return HttpResponse("Thank you for Contacting us.")
+
+def user_registe(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists")
+            return redirect('register')
+
+        User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+
+        messages.success(request, "Registration Successful")
+        return redirect('login')
+
+    return render(request, 'register.html')
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, "Invalid Username or Password")
+
+    return render(request, 'login.html')
+
+
+def user_home(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    return render(request, 'home.html')
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')
+ 
+ 
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url='/')
+def user_home(request):
+    return render(request, 'user_home.html')
+
